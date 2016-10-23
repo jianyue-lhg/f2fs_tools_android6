@@ -274,11 +274,11 @@ static int f2fs_prepare_super_block(void)
 
 	set_sb(segment_count_nat, get_sb(segment_count_nat) * 2);
 
-	set_sb(ssa_blkaddr, get_sb(nat_blkaddr) + get_sb(segment_count_nat) *
-			config.blks_per_seg);
-
 	set_sb(segment_count_dedupe, 12);
- 	set_sb(dedupe_blkaddr, get_sb(ssa_blkaddr) + get_sb(segment_count_ssa)*config.blks_per_seg);
+	set_sb(dedupe_blkaddr, get_sb(nat_blkaddr) + get_sb(segment_count_nat)*config.blks_per_seg);
+
+	set_sb(ssa_blkaddr, get_sb(dedupe_blkaddr) + get_sb(segment_count_dedupe) *
+			config.blks_per_seg);
 
 	total_valid_blks_available = (get_sb(segment_count) -
 			(get_sb(segment_count_ckpt) +
@@ -309,6 +309,7 @@ static int f2fs_prepare_super_block(void)
 			(get_sb(segment_count_ckpt) +
 			 get_sb(segment_count_sit) +
 			 get_sb(segment_count_nat) +
+			 get_sb(segment_count_dedupe) +
 			 get_sb(segment_count_ssa)));
 
 	set_sb(section_count, get_sb(segment_count_main) / config.segs_per_sec);
@@ -460,7 +461,7 @@ static int f2fs_init_dedupe_area(void)
 	dedupe_seg_addr *= blk_size;
 
 	DBG(1, "\tFilling dedupe area at offset 0x%08"PRIx64"\n", dedupe_seg_addr);
-	for (index = 0; index < (get_sb(segment_count_dedupe) / 2); index++) {
+	for (index = 0; index < get_sb(segment_count_dedupe); index++) {
 		if (dev_fill(zero_buf, dedupe_seg_addr, seg_size)) {
 			MSG(1, "\tError: While zeroing out the dedupe area \
 					on disk!!!\n");

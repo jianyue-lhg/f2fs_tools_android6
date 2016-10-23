@@ -125,4 +125,30 @@ LOCAL_CFLAGS := $(version_CFLAGS)
 LOCAL_HOST_SHARED_LIBRARIES :=  libext2_uuid_host
 include $(BUILD_HOST_EXECUTABLE)
 
+#----------------------------------------------------------
+include $(CLEAR_VARS)
+# The LOCAL_MODULE name is referenced by the code. Don't change it.
+LOCAL_MODULE := f2fstat
+LOCAL_SRC_FILES := \
+        tools/f2fstat.c \
+
+LOCAL_C_INCLUDES := $(common_C_INCLUDES)
+LOCAL_CFLAGS := $(version_CFLAGS)
+LOCAL_SYSTEM_SHARED_LIBRARIES := libc
+LOCAL_MODULE_TAGS := optional
+include $(BUILD_EXECUTABLE)
+
+#----------------------------------------------------------
+include $(CLEAR_VARS)
+# The LOCAL_MODULE name is referenced by the code. Don't change it.
+LOCAL_MODULE := f2fsioc
+LOCAL_SRC_FILES := \
+        tools/f2fsioc.c \
+
+LOCAL_C_INCLUDES := $(common_C_INCLUDES)
+LOCAL_CFLAGS := $(version_CFLAGS)
+LOCAL_SYSTEM_SHARED_LIBRARIES := libc
+LOCAL_MODULE_TAGS := optional
+include $(BUILD_EXECUTABLE)
+
 endif
