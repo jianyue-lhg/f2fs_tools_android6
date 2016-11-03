@@ -20,6 +20,8 @@
 #include <config.h>
 #endif
 
+#define F2FS_DEDUPE 1
+
 typedef u_int64_t	u64;
 typedef u_int32_t	u32;
 typedef u_int16_t	u16;
@@ -353,9 +355,11 @@ struct f2fs_super_block {
 	__le32 cp_payload;
 	__u8 version[VERSION_LEN];	/* the kernel version */
 	__u8 init_version[VERSION_LEN];	/* the initial kernel version */
+#ifdef F2FS_DEDUPE
 	__u8 reserved[21];
 	__le32 segment_count_dedupe;	/* # of segments for Dedupe */
  	__le32 dedupe_blkaddr;		/* start block address of Dedupe */
+#endif
 } __attribute__((packed));
 
 /*
