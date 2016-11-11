@@ -460,7 +460,9 @@ struct f2fs_inode {
 	__le32 i_gid;			/* group ID */
 	__le32 i_links;			/* links count */
 	__le64 i_size;			/* file size in bytes */
-	__le64 i_blocks;		/* file size in blocks */
+	__le32 i_blocks;		/* file size in blocks */
+	__le16 i_dedupe_addr;
+	__le16 i_dedupe_size;
 	__le64 i_atime;			/* access time */
 	__le64 i_ctime;			/* change time */
 	__le64 i_mtime;			/* modification time */

@@ -257,7 +257,7 @@ static int f2fs_prepare_super_block(void)
 		max_sit_bitmap_size = sit_bitmap_size;
 
 #ifdef F2FS_DEDUPE
-	set_sb(segment_count_dedupe, 12);
+	set_sb(segment_count_dedupe, 100);
 	dedupe_bitmap_size = get_sb(segment_count_dedupe)/2*(1024/4)/8;
 #endif
 
@@ -284,7 +284,7 @@ static int f2fs_prepare_super_block(void)
 
 	max_nat_segments = (max_nat_bitmap_size * 8) >> log_blks_per_seg;
 
-	//printf("%d %d %d...\n",max_sit_bitmap_size, get_sb(segment_count_nat),max_nat_segments);
+	//printf("%d %d %d...\n",max_sit_bitmap_size, dedupe_bitmap_size,max_nat_bitmap_size);
 	if (get_sb(segment_count_nat) > max_nat_segments)
 		set_sb(segment_count_nat, max_nat_segments);
 
