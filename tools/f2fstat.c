@@ -52,6 +52,10 @@ unsigned long logical_blk_cnt;
 unsigned long physical_blk_cnt;
 unsigned long dedupe_rate;
 
+unsigned long dynamic_logical_blk_cnt;
+unsigned long dynamic_physical_blk_cnt;
+unsigned long dynamic_dedupe_rate;
+
 
 struct options {
 	int delay;
@@ -103,6 +107,9 @@ void f2fstat(struct options *opt)
 		{ "  - Valid",		&valid_segs,		0 },
 		{ "  - dents",		&dirty_dents,		0 },
 		{ "  - duprate",	&dedupe_rate,	0 },		//for dedupe
+		{ "  - dynamic_duprate",	&dynamic_dedupe_rate,	0 },		//for dedupe
+		{ "  - dynamic_lblk_cnt",	&dynamic_logical_blk_cnt,	0 },		//for dedupe
+		{ "  - dynamic_pblk_cnt",	&dynamic_physical_blk_cnt,	0 },		//for dedupe
 		{ "  - free_nids",	&free_nids,		0 },
 		{ "  - lblk_cnt",	&logical_blk_cnt,	0 },	//for dedupe
 		{ "  - meta",		&dirty_meta,		KEY_META },
@@ -238,15 +245,15 @@ void print_head(char *res)
 {
 	char *ptr, *ptr_buf;
 	char buf[1024], head[1024];
-	char name[23][10] = {"util", "node", "data", "free", "valid", "dirty", "prefree", "node", "dent", "meta",
-		"sit", "nat", "fnid", "cp", "gc", "ssr", "lfs", "total", "node", "meta", "lblk", "pblk", "drate"};
+	char name[26][10] = {"util", "node", "data", "free", "valid", "dirty", "prefree", "node", "dent", "meta",
+		"sit", "nat", "fnid", "cp", "gc", "ssr", "lfs", "total", "node", "meta", "lblk", "pblk", "drate", "dlblk", "dpblk", "ddrate"};
 	int i, len, prev_index = 0;
 
 	ptr_buf = buf;
 	memset(buf, ' ', 1024);
 	memset(head, ' ', 1024);
 
-	for (i = 0; i < 23; i++) {
+	for (i = 0; i < 26; i++) {
 		ptr = (i == 0) ? strtok(res, " ") : strtok(NULL, " ");
 		strncpy(ptr_buf, name[i], strlen(name[i]));
 		if (i == 1) {
@@ -288,7 +295,7 @@ void print_head(char *res)
 
 int main(int argc, char *argv[])
 {
-	char format[] = "%4ld %4ld %4ld %4ld %5ld %5ld %7ld %4ld %4ld %4ld %3ld %3ld %4ld %2ld %2ld %3ld %3ld %5ld %4ld %4ld %4ld %4ld %4ld%%%";
+	char format[] = "%4ld %4ld %4ld %4ld %5ld %5ld %7ld %4ld %4ld %4ld %3ld %3ld %4ld %2ld %2ld %3ld %3ld %5ld %4ld %4ld %4ld %4ld %4ld%%  %4ld %4ld  %4ld%%%";
 	char buf[1024], tmp[1024];
 	int head_interval;
 	struct options opt = {
@@ -307,7 +314,7 @@ int main(int argc, char *argv[])
 			free_segs, valid_segs, dirty_segs, prefree_segs,
 			dirty_node, dirty_dents, dirty_meta, dirty_sit, nat_caches, free_nids,
 			cp, gc, ssr_blks, lfs_blks, memory_kb, node_kb, meta_kb,
-			logical_blk_cnt, physical_blk_cnt, dedupe_rate);
+			logical_blk_cnt, physical_blk_cnt, dedupe_rate, dynamic_logical_blk_cnt, dynamic_physical_blk_cnt, dynamic_dedupe_rate);
 
 		strcpy(tmp, buf);
 		if (head_interval == opt.interval)
